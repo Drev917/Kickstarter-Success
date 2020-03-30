@@ -45,8 +45,6 @@ for project in range(len(ks)):
 		successful_sum += ks["goal"][project]
 	if (ks["state"][project] == "failed"):
 		failed_sum += ks["goal"][project]
-print(successful_sum)
-print(failed_sum)
 
 mean_Success = '${:,.2f}'.format(successful_sum / ks_sum)
 mean_Failed = '${:,.2f}'.format(failed_sum / (ks_TotalProjects - ks_sum))

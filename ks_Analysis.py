@@ -1,5 +1,4 @@
 # Imports
-
 import pandas as pd
 import numpy as np
 import matplotlib
@@ -18,7 +17,7 @@ ks_Cor = ks.corr()
 
 # try to find variables with high correlation to state_bool
 ks_CorTarget = abs(ks_Cor['state_bool'])
-rel_Feat = ks_CorTarget[ks_CorTarget>0]
+rel_Feat = ks_CorTarget[ks_CorTarget > 0]  # change value to be more selective
 print(rel_Feat)
 '''
 No good variables are found.

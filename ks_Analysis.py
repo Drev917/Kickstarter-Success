@@ -24,3 +24,7 @@ No good variables are found.
 Using a boolean (non-continuous) Y means we'll probably need to look at other methods of variable selection
 and model building.
 '''
+
+'''
+CREATE DUMMY VARIABLES (OR RECODE AS INT) FOR OTHER CATEGORICAL COLUMNS TO ALLOW CORRELATION CALCULATION.
+'''

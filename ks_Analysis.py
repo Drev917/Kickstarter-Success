@@ -28,3 +28,11 @@ and model building.
 '''
 CREATE DUMMY VARIABLES (OR RECODE AS INT) FOR OTHER CATEGORICAL COLUMNS TO ALLOW CORRELATION CALCULATION.
 '''
+
+#Convert successful/failed 'state' into numeric variable: successful = 1 and failed = 0
+#Analyzed total projects and success rate 
+ks["state_numeric"] = (ks["state"]=="successful").astype(int)
+ks_sum = ks["state_numeric"].sum()
+ks_TotalProjects = len(ks)
+ks_SuccessRate = format(ks_sum / ks_TotalProjects, '.2%')
+print("Kick Starter project success rate: " + str(ks_SuccessRate) + "\nout of " + str(ks_TotalProjects) + " total projects analyzed.")

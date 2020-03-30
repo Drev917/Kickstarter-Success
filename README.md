@@ -2,7 +2,9 @@
 
 This repository contains the Kickstarter Data Analysis project files.
 
-Our group intends to determine the factors that contribute to a Kickstarter project’s success.  We will start by performing exploratory data analysis to identify any statistical issues such as:  bad or inconsistent data, collinearity, lack of independence of errors, non-normality of errors, and unequal variance of errors. Next, we will look for relationships and correlations between the different Kickstarter campaigns. Examples of questions that we will be looking to analyze:
+Our group intends to determine the factors that contribute to a Kickstarter project’s success.  We will start by performing exploratory data analysis to identify any statistical issues such as:  bad or inconsistent data, collinearity, lack of independence of errors, non-normality of errors, and unequal variance of errors. Next, we will look for relationships and correlations between the different Kickstarter campaigns. 
+
+Examples of questions that we will be looking to analyze:
 •	The average pledge amount by Kickerstarter campaign and whether certain categories tend to have larger goals for overall funding
 We will be looking at hypothesis testing and statistical significance of the averages
 •	If correlation can be determined between pledged amount and backers count by Kickstarter category and whether that leads to a state change of ‘Successful’ vs ‘Failed’

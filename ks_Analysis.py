@@ -9,6 +9,38 @@ import matplotlib.pyplot as plt
 ks = pd.DataFrame(pd.read_csv("ks.csv"))
 print(list(ks.columns))
 
+print(list(ks.columns))
+
+ks["state_successful"] = (ks["state"] == "successful").astype(int)
+ks["state_failed"] = (ks["state"] == "failed").astype(int)
+del ks["state"]
+
+#Analyzed total projects and success rate 
+ks_success_num = ks["state_successful"].sum()
+ks_failed_num = ks["state_failed"].sum()
+ks_TotalProjects = ks_success_num + ks_failed_num
+ks_SuccessRate = format(ks_success_num / ks_TotalProjects, '.2%')
+print("\nKick Starter project success rate: " + str(ks_SuccessRate) + "\nout of " + str(ks_TotalProjects) + " total projects analyzed.\n") 
+
+successful_sum = 0
+failed_sum = 0
+for project in range(len(ks)):
+	if (ks["state_successful"][project] == 1):
+		successful_sum += ks["goal"][project]
+	if (ks["state_failed"][project] == 1):
+		failed_sum += ks["goal"][project]
+
+mean_Success = '${:,.2f}'.format(successful_sum / ks_success_num)
+mean_Failed = '${:,.2f}'.format(failed_sum / ks_failed_num)
+
+print('The average successful Kick Starter project had a goal of ' + str(mean_Success) + '.')
+print('The average failed Kick Starter project had a goal of ' + str(mean_Failed) + '.')
+print('The average failed Kick Starters had an average goal 15x that of the successful Kick Starters.\n')
+
+		
+
+
+"""
 # create boolean column for failed/successful
 ks['state_bool'] = ks['state'].replace({'failed': False, 'successful': True}).astype(bool)
 
@@ -28,27 +60,5 @@ and model building.
 '''
 CREATE DUMMY VARIABLES (OR RECODE AS INT) FOR OTHER CATEGORICAL COLUMNS TO ALLOW CORRELATION CALCULATION.
 '''
-#****Need to figure way to drop rows where state = 'cancelled', 'live', or 'suspended' in order to only analyze successful and failed projects
-#Convert successful/failed 'state' into numeric variable: successful = 1 and failed = 0
-#Analyzed total projects and success rate 
-ks["state_numeric"] = (ks["state"]=="successful").astype(int)
-ks_sum = ks["state_numeric"].sum()
-ks_TotalProjects = len(ks)
-ks_SuccessRate = format(ks_sum / ks_TotalProjects, '.2%')
-print("Kick Starter project success rate: " + str(ks_SuccessRate) + "\nout of " + str(ks_TotalProjects) + " total projects analyzed.\n")
+"""
 
-#Looked at the averages of the goals for failed Kick Starters vs successful Kick Starters
-successful_sum = 0
-failed_sum = 0
-for project in range(len(ks)):
-	if (ks["state"][project] == "successful"):
-		successful_sum += ks["goal"][project]
-	if (ks["state"][project] == "failed"):
-		failed_sum += ks["goal"][project]
-
-mean_Success = '${:,.2f}'.format(successful_sum / ks_sum)
-mean_Failed = '${:,.2f}'.format(failed_sum / (ks_TotalProjects - ks_sum))
-
-print('The average "successful" Kick Starter project had a goal of ' + str(mean_Success) + '.')
-print('The average "failed" Kick Starter project had a goal of ' + str(mean_Failed) + '.')
-print('The average "failed" Kick Starters had an average goal 12x that of the "successful" Kick Starters' + '.')

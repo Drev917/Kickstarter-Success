@@ -28,7 +28,7 @@ and model building.
 '''
 CREATE DUMMY VARIABLES (OR RECODE AS INT) FOR OTHER CATEGORICAL COLUMNS TO ALLOW CORRELATION CALCULATION.
 '''
-
+#****Need to figure way to drop rows where state = 'cancelled', 'live', or 'suspended' in order to only analyze successful and failed projects
 #Convert successful/failed 'state' into numeric variable: successful = 1 and failed = 0
 #Analyzed total projects and success rate 
 ks["state_numeric"] = (ks["state"]=="successful").astype(int)

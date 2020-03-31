@@ -35,7 +35,7 @@ mean_Failed = '${:,.2f}'.format(failed_sum / ks_failed_num)
 
 print('The average successful Kick Starter project had a goal of ' + str(mean_Success) + '.')
 print('The average failed Kick Starter project had a goal of ' + str(mean_Failed) + '.')
-print('The average failed Kick Starters had an average goal 15x that of the successful Kick Starters.\n')
+print('The mean failed Kick Starter project had an average goal 15x that of the mean successful Kick Starter project.\n')
 
 		
 

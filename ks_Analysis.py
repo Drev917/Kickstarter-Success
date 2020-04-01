@@ -3,13 +3,21 @@ import pandas as pd
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 # create ks dataframe
 ks = pd.DataFrame(pd.read_csv("ks.csv"))
-print(list(ks.columns))
 
 print(list(ks.columns))
+
+#drops uneccessary column data
+ks = ks.drop(['blurb','country','creator','currency_symbol',
+                  'current_currency','is_backing','is_starred','location',
+                  'photo','profile','source_url','urls','name','slug','id',
+                  'permissions','friends','created_at','deadline','currency',
+                  'currency_trailing_code','state_changed_at','launched_at','fx_rate',
+                  'static_usd_rate','pledged'], axis=1) 
 
 ks["state_successful"] = (ks["state"] == "successful").astype(int)
 ks["state_failed"] = (ks["state"] == "failed").astype(int)
@@ -22,6 +30,7 @@ ks_TotalProjects = ks_success_num + ks_failed_num
 ks_SuccessRate = format(ks_success_num / ks_TotalProjects, '.2%')
 print("\nKick Starter project success rate: " + str(ks_SuccessRate) + "\nout of " + str(ks_TotalProjects) + " total projects analyzed.\n") 
 
+#Mean goals of successful vs failed Kick Starter projects
 successful_sum = 0
 failed_sum = 0
 for project in range(len(ks)):
@@ -37,6 +46,7 @@ print('The average successful Kick Starter project had a goal of ' + str(mean_Su
 print('The average failed Kick Starter project had a goal of ' + str(mean_Failed) + '.')
 print('The mean failed Kick Starter project had an average goal 15x that of the mean successful Kick Starter project.\n')
 
+
 #look at mean funding vs mean goal for successful and failed Kick Starter projects
 successful_fund = 0
 failed_fund = 0
@@ -50,7 +60,8 @@ mean_FundSuccess = '${:,.2f}'.format(successful_fund / ks_success_num)
 mean_FundFailed = '${:,.2f}'.format(failed_fund / ks_failed_num)
 
 print('The average successful Kick Starter project was funded at ' + str(mean_FundSuccess) + ' vs the mean goal of ' + str(mean_Success) + '.')
-print('The average failed Kick Starter project was funded at ' + str(mean_FundFailed) + ' vs the mean goal of ' + str(mean_Failed) + '.')		
+print('The average failed Kick Starter project was funded at ' + str(mean_FundFailed) + ' vs the mean goal of ' + str(mean_Failed) + '.')
+		
 
 
 """
@@ -74,13 +85,3 @@ and model building.
 CREATE DUMMY VARIABLES (OR RECODE AS INT) FOR OTHER CATEGORICAL COLUMNS TO ALLOW CORRELATION CALCULATION.
 '''
 """
-#Delete redundant columns
-
-new_ks = ks.drop(['blurb','category','country','creator','currency_symbol',
-                  'current_currency','is_backing','is_starred','location',
-                  'photo','profile','source_url','urls','name','slug','id',
-                  'permissions','friends','created_at','deadline','currency',
-                  'currency_trailing_code','state_changed_at','launched_at','fx_rate',
-                  'static_usd_rate','pledged','usd_pledged'], axis=1) 
-
-print(list(new_ks.columns))

@@ -74,4 +74,13 @@ and model building.
 CREATE DUMMY VARIABLES (OR RECODE AS INT) FOR OTHER CATEGORICAL COLUMNS TO ALLOW CORRELATION CALCULATION.
 '''
 """
+#Delete redundant columns
 
+new_ks = ks.drop(['blurb','category','country','creator','currency_symbol',
+                  'current_currency','is_backing','is_starred','location',
+                  'photo','profile','source_url','urls','name','slug','id',
+                  'permissions','friends','created_at','deadline','currency',
+                  'currency_trailing_code','state_changed_at','launched_at','fx_rate',
+                  'static_usd_rate','pledged','usd_pledged'], axis=1) 
+
+print(list(new_ks.columns))

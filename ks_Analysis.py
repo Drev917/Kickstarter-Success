@@ -37,7 +37,20 @@ print('The average successful Kick Starter project had a goal of ' + str(mean_Su
 print('The average failed Kick Starter project had a goal of ' + str(mean_Failed) + '.')
 print('The mean failed Kick Starter project had an average goal 15x that of the mean successful Kick Starter project.\n')
 
-		
+#look at mean funding vs mean goal for successful and failed Kick Starter projects
+successful_fund = 0
+failed_fund = 0
+for project in range(len(ks)):
+	if (ks["state_successful"][project] == 1):
+		successful_fund += ks["usd_pledged"][project]
+	if (ks["state_failed"][project] == 1):
+		failed_fund += ks["usd_pledged"][project]
+
+mean_FundSuccess = '${:,.2f}'.format(successful_fund / ks_success_num)
+mean_FundFailed = '${:,.2f}'.format(failed_fund / ks_failed_num)
+
+print('The average successful Kick Starter project was funded at ' + str(mean_FundSuccess) + ' vs the mean goal of ' + str(mean_Success) + '.')
+print('The average failed Kick Starter project was funded at ' + str(mean_FundFailed) + ' vs the mean goal of ' + str(mean_Failed) + '.')		
 
 
 """

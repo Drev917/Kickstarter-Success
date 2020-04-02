@@ -1,14 +1,5 @@
 """
-description of the ks data we are analysisng here.
-Goal: To be able to analyze data to find out impact/correlation of different factors on the success of 
-securing funding.
-Dependent variable is State.
-
-This will be achieved in following steps
-1. Clean up data
-2. Remove unwanted data.
-3. Convert categorical values to integer values.
-4. 
+Dataset: Kickstarter campaigns scraped from January 2020 on https://webrobots.io/kickstarter-datasets/
 """
 
 # Imports
@@ -18,21 +9,20 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import json
 
-# create ks dataframe
+# Create ks dataframe
 ks = pd.read_csv("ks.csv")
 
 
-#print the list of columns
+#Print the list of columns
 for colName in ks:
     print(colName)
     
 
-#what are the other states ks["state"].unique()['failed', 'successful', 'live', 'canceled', 'suspended']
-#Remove the live, canceled and suspended projects, assuming that failed means no funding and successful means funding
+#What are the other states ks["state"].unique()['failed', 'successful', 'live', 'canceled', 'suspended']
+#Remove the live, cancelled and suspended projects, assuming that failed means no funding and successful means funding
 #secured
     
 #Remove all the states where we do not know the status of funding
-
 indexNames = ks[ ks['state'] == 'live' ].index
 ks.drop(indexNames , inplace=True)
 
@@ -43,10 +33,10 @@ indexNames = ks[ ks['state'] == 'suspended' ].index
 ks.drop(indexNames , inplace=True)
 
 
-#now that we have just failed or successfull, we can use the same column to have integer values
+#Now that we have just failed or successfull, we can convert the column to have integer values
 ks["is_success"] = (ks["state"] == "successful").astype(int)
 
-#drops uneccessary column data
+#Dropping uneccessary column data
 ks = ks.drop(['blurb','country','creator','currency_symbol',
                   'current_currency','is_backing','is_starred','location',
                   'photo','profile','source_url','urls','name','slug','id',
@@ -55,7 +45,7 @@ ks = ks.drop(['blurb','country','creator','currency_symbol',
                   'static_usd_rate','pledged'], axis=1) 
 
 
-#Analyzed total projects and success rate 
+#Analyzing total projects and overall success rate 
 ks_success_num = ks["is_success"].sum()
 
 ks_failed_num = len(ks) - ks_success_num
@@ -66,10 +56,10 @@ ks_SuccessRate = format(ks_success_num / ks_TotalProjects, ".2%")
 print("\nKick Starter project success rate: " + str(ks_SuccessRate) + "\nout of " + str(ks_TotalProjects) + " total projects analyzed.\n") 
 
 
-#remove state column as it is not needed
+#Remove state column as it is not needed
 del ks["state"]
 
-#Mean goals of successful vs failed Kick Starter projects
+#Mean goals of successful vs failed Kickstarter projects
 successful_sum = ks[ks['is_success']==1]['goal'].sum()
 failed_sum = ks[ks['is_success']==0]['goal'].sum()
 
@@ -77,88 +67,86 @@ mean_Success = "${:,.2f}".format(successful_sum / ks_success_num)
 mean_Failed = "${:,.2f}".format(failed_sum / ks_failed_num)
 
 
-print("The average successful Kick Starter project had a goal of " + str(mean_Success) + ".")
-print("The average failed Kick Starter project had a goal of " + str(mean_Failed) + ".")
-print("The mean failed Kick Starter project had an average goal 15x that of the mean successful Kick Starter project.\n")
+print("The average successful Kickstarter project had a goal of " + str(mean_Success) + ".")
+print("The average failed Kickstarter project had a goal of " + str(mean_Failed) + ".")
+print("The mean failed Kickstarter project had an average goal 15x that of the mean successful Kickstarter project.\n")
 #The above summary states a good relationship beween goal and success rate of a funding
 
 
-#look at mean funding vs mean goal for successful and failed Kick Starter projects
+#Look at mean funding vs mean goal for successful and failed Kickstarter projects
 successful_fund = ks[ks['is_success']==1]['usd_pledged'].sum()
 failed_fund = ks[ks['is_success']==0]['usd_pledged'].sum()
 
 mean_FundSuccess = '${:,.2f}'.format(successful_fund / ks_success_num)
 mean_FundFailed = '${:,.2f}'.format(failed_fund / ks_failed_num)
 
-print('The average successful Kick Starter project was funded at ' + str(mean_FundSuccess) + ' vs the mean goal of ' + str(mean_Success) + '.')
-print('The average failed Kick Starter project was funded at ' + str(mean_FundFailed) + ' vs the mean goal of ' + str(mean_Failed) + '.')
+print('The average successful Kickstarter project was funded at ' + str(mean_FundSuccess) + ' vs the mean goal of ' + str(mean_Success) + '.')
+print('The average failed Kickstarter project was funded at ' + str(mean_FundFailed) + ' vs the mean goal of ' + str(mean_Failed) + '.')
 
 		
 """
-Lets clean the data now and keep only those data which are making impact
-data clean up, keep only the relevant data. 
+Lets clean the data now and keep only those data which are making impact: keep only the relevant data. 
 Following columns are of interest, 
 "backers_count", "category",  "goal","is_backing", "is_starrable", "is_starred",
 "staff_pick", "state_successful", "state_failed"
 
-the category field has json which contains slug key which is essentially category and sub category combination.
+The category field has json which contains slug key which is essentially category and sub category combination.
 we will choose only the first path of the slug as category
 
-removed  is_backing , is_starred because it is nan
-
+Also removed is_backing , is_starred columns because these contain NaN values and are unnecessary to the overall analysis
 """
 
 
-#show min 7 column data
+#Show min 7 columns of data
 pd.set_option('display.max_columns', 7)
 
 
-#take out the category from first path of slug field
+#Removing the category from first path of slug field
 cat1 = []
 for i in ks['category']:
     c1 = json.loads(i)
     cat1.append(c1["slug"].split('/')[0])
 
-#replace the category colum with the category sliced out ofrom json field
+#Replacing the category column with the category sliced from the json field
 ks["category"] = cat1
 
 selectedCols = ["is_success","backers_count",  "category",  "goal", "usd_pledged", "is_starrable","staff_pick"]
 
-#build the relevant data set from the ks dataset
+#Building the relevant data set from the ks dataset
 relData = ks.loc[:,selectedCols]
 
-#here is a cleaned data
+#Data cleansed preview
 relData.head()
 
-#check the relation between is_success and backers count
-#it shows that distribution of success of scuring funds against the backers_count is not normal
+#Visualizing relationship between is_success and backers count
+#Identifies distribution of success of securing funds against the backers_count is not normal
 successGroups = relData.groupby(['backers_count'])['is_success']
 successGroups.count().plot(kind='bar')
 
-#check the distribution of success agains different categories
-#The top two categories which to secure fundint are Film & Video and Art
+#Visualizing the distribution of success against different categories
+#The top two categories successfully securing funding are 'Film & Video' and 'Art'
 successGroups = relData.groupby(['category'])['is_success']
 successGroups.count().plot(kind='bar')
 
-#box plots, data gives no indications on relation
+#Box plots, data gives no indications on relation
 relData.plot.box(grid=True)
 
-#histograms to be analysed
-#success against backers count
+#Histograms to be analysed
+#Visualizing success against backers count
 relData['backers_count'].hist(by=relData['is_success'])
 
-#success against categories
+#Visualizing success against categories
 relData['category'].hist(by=relData['is_success'])
 
 
-#other columns can be compared as well to find out a relation, however our dependent variable is eithe 0 or 1
-#so we can user logistic regression to 
+#Other columns can be compared as well to determine correlation, however our dependent variable is either 0 or 1
+#so we can use logistic regression
 
 
-#we can  run regression
-#we have total 3346 rows, we will use 2675 rows to train the data and rest to test the model
+#Regression analysis
+#We have a total of 3346 rows; we will use 2675 rows to train the data and rest to test the model
 
-#convert the categories and staff_picked and is_starrable to integer colums
+#Converting 'categories' and 'staff_picked' and 'is_starrable' to integer colums
 
 relData["category"].unique()
 
@@ -218,7 +206,7 @@ from sklearn import linear_model
 
 reg = linear_model.LogisticRegression(solver='lbfgs')
 
-#traing data
+#Training and modelling data
 
 model = reg.fit(xTrain,yTrain)
 

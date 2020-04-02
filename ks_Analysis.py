@@ -16,14 +16,14 @@ import pandas as pd
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
+import seaborn as sns
 import json
-
 
 # create ks dataframe
 ks = pd.read_csv("ks.csv")
 
 
-#print the list of colums
+#print the list of columns
 for colName in ks:
     print(colName)
     
@@ -44,8 +44,17 @@ indexNames = ks[ ks['state'] == 'suspended' ].index
 ks.drop(indexNames , inplace=True)
 
 
-#now that we have just failed or successfull, we can use the same column to have integer valeus
+#now that we have just failed or successfull, we can use the same column to have integer values
 ks["is_success"] = (ks["state"] == "successful").astype(int)
+
+#drops uneccessary column data
+ks = ks.drop(['blurb','country','creator','currency_symbol',
+                  'current_currency','is_backing','is_starred','location',
+                  'photo','profile','source_url','urls','name','slug','id',
+                  'permissions','friends','created_at','deadline','currency',
+                  'currency_trailing_code','state_changed_at','launched_at','fx_rate',
+                  'static_usd_rate','pledged'], axis=1) 
+
 
 #Analyzed total projects and success rate 
 ks_success_num = ks["is_success"].sum()
@@ -57,20 +66,34 @@ ks_TotalProjects = len(ks)
 ks_SuccessRate = format(ks_success_num / ks_TotalProjects, ".2%")
 print("\nKick Starter project success rate: " + str(ks_SuccessRate) + "\nout of " + str(ks_TotalProjects) + " total projects analyzed.\n") 
 
-#remove state columg as it is not needed
+
+#remove state column as it is not needed
 del ks["state"]
 
+#Mean goals of successful vs failed Kick Starter projects
 successful_sum = ks[ks['is_success']==1]['goal'].sum()
 failed_sum = ks[ks['is_success']==0]['goal'].sum()
 
 mean_Success = "${:,.2f}".format(successful_sum / ks_success_num)
 mean_Failed = "${:,.2f}".format(failed_sum / ks_failed_num)
 
+
 print("The average successful Kick Starter project had a goal of " + str(mean_Success) + ".")
 print("The average failed Kick Starter project had a goal of " + str(mean_Failed) + ".")
 print("The mean failed Kick Starter project had an average goal 15x that of the mean successful Kick Starter project.\n")
-
 #The above summary states a good relationship beween goal and success rate of a funding
+
+
+#look at mean funding vs mean goal for successful and failed Kick Starter projects
+successful_fund = ks[ks['is_success']==1]['usd_pledged'].sum()
+failed_fund = ks[ks['is_success']==0]['usd_pledged'].sum()
+
+mean_FundSuccess = '${:,.2f}'.format(successful_fund / ks_success_num)
+mean_FundFailed = '${:,.2f}'.format(failed_fund / ks_failed_num)
+
+print('The average successful Kick Starter project was funded at ' + str(mean_FundSuccess) + ' vs the mean goal of ' + str(mean_Success) + '.')
+print('The average failed Kick Starter project was funded at ' + str(mean_FundFailed) + ' vs the mean goal of ' + str(mean_Failed) + '.')
+
 		
 """
 Lets clean the data now and keep only those data which are making impact
@@ -86,9 +109,9 @@ removed  is_backing , is_starred because it is nan
 
 """
 
+
 #show min 7 column data
 pd.set_option('display.max_columns', 7)
-
 
 
 #take out the category from first path of slug field
@@ -203,9 +226,24 @@ reg = linear_model.LogisticRegression()
 model = reg.fit(xTrain,yTrain)
 
 
+"""
+# create boolean column for failed/successful
+ks['state_bool'] = ks['state'].replace({'failed': False, 'successful': True}).astype(bool)
 
+# correlation of columns
+ks_Cor = ks.corr()
 
+# try to find variables with high correlation to state_bool
+ks_CorTarget = abs(ks_Cor['state_bool'])
+rel_Feat = ks_CorTarget[ks_CorTarget > 0]  # change value to be more selective
+print(rel_Feat)
+'''
+No good variables are found.
+Using a boolean (non-continuous) Y means we'll probably need to look at other methods of variable selection
+and model building.
+'''
 
-
-
-
+'''
+CREATE DUMMY VARIABLES (OR RECODE AS INT) FOR OTHER CATEGORICAL COLUMNS TO ALLOW CORRELATION CALCULATION.
+'''
+"""

@@ -14,7 +14,6 @@ This will be achieved in following steps
 # Imports
 import pandas as pd
 import numpy as np
-import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
 import json

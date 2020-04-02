@@ -210,3 +210,26 @@ reg = linear_model.LogisticRegression(solver='lbfgs')
 
 model = reg.fit(xTrain,yTrain)
 
+
+
+
+
+
+#K-Nearest neighbors
+
+# Ramdomly choose the values that closed to the means for sample values 
+
+sample_backers_count = 215
+sample_goal = 94000
+sample_usd_pledged =23500
+
+backers_countDiff = abs(sample_backers_count-relData['backers_count']) #difference for backers_count
+goalDiff = abs(sample_goal-relData['goal']) #difference for goal
+usd_pledgedDiff = abs(sample_usd_pledged-relData['usd_pledged']) # difference for usd_pledged
+relData['dist'] = (backers_countDiff**2+goalDiff**2+usd_pledgedDiff**2)**0.5
+
+sort_data = relData.sort_values(by='dist', ascending=True) #sort data by distance
+
+FiftyNearestDist = sort_data['dist'].head(50) #select 50 nearest neighbor
+
+print(FiftyNearestDist)

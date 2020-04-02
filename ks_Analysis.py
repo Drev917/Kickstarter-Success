@@ -122,7 +122,7 @@ for i in ks['category']:
 #replace the category colum with the category sliced out ofrom json field
 ks["category"] = cat1
 
-selectedCols = ["is_success","backers_count",  "category",  "goal","pledged", "is_starrable","staff_pick"]
+selectedCols = ["is_success","backers_count",  "category",  "goal", "usd_pledged", "is_starrable","staff_pick"]
 
 #build the relevant data set from the ks dataset
 relData = ks.loc[:,selectedCols]

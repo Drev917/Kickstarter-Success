@@ -131,8 +131,6 @@ relData = ks.loc[:,selectedCols]
 #here is a cleaned data
 relData.head()
 
-import matplotlib.pyplot as plt
-
 #check the relation between is_success and backers count
 #it shows that distribution of success of scuring funds against the backers_count is not normal
 successGroups = relData.groupby(['backers_count'])['is_success']
@@ -219,7 +217,7 @@ yTest = relData.iloc[testRows,0] #first columns
 
 from sklearn import linear_model
 
-reg = linear_model.LogisticRegression()
+reg = linear_model.LogisticRegression(solver='lbfgs')
 
 #traing data
 

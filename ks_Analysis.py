@@ -210,8 +210,23 @@ reg = linear_model.LogisticRegression(solver='lbfgs')
 
 model = reg.fit(xTrain,yTrain)
 
+print('\nBeta predictor values :' + str(reg.coef_)) #prints all beta values
+print('Beta0 (y-intercept) :' + str(reg.intercept_)) #print value of beta0 (y-intercept)
 
+yPredictions = reg.predict(xTest)
 
+#Measuring the effectiveness of our model
+errors = (yPredictions-yTest)
+
+from sklearn.metrics import mean_squared_error
+mse = mean_squared_error(yTest,yPredictions)
+print('\nThe average error that remains in our model (mse): ' + str(mse))
+
+#R-squared value
+from sklearn.metrics import r2_score
+r2 = r2_score(yTest,yPredictions) #uses N=160 as divisor
+
+print('\nThe amount of variance in y that can be explained away by using information about x in our linear model (r^2): ' + str(r2))
 
 
 
@@ -232,4 +247,4 @@ sort_data = relData.sort_values(by='dist', ascending=True) #sort data by distanc
 
 FiftyNearestDist = sort_data['dist'].head(50) #select 50 nearest neighbor
 
-print(FiftyNearestDist)
+print('\nFifty K-Nearest neighbors : ' + str(list(FiftyNearestDist)))

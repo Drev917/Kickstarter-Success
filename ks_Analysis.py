@@ -206,7 +206,7 @@ from sklearn import linear_model
 
 reg = linear_model.LogisticRegression(solver='lbfgs')
 
-#Training and modelling data
+#Training and modeling data
 
 model = reg.fit(xTrain,yTrain)
 
@@ -218,17 +218,19 @@ yPredictions = reg.predict(xTest)
 #Measuring the effectiveness of our model
 errors = (yPredictions-yTest)
 
+#Number of correct predictions divided by total predictions
+score = reg.score(xTest,yTest)
+print('\nCorrect predictions of success percentage (score): ' + str(score))
+
 from sklearn.metrics import mean_squared_error
 mse = mean_squared_error(yTest,yPredictions)
 print('\nThe average error that remains in our model (mse): ' + str(mse))
 
 #R-squared value
 from sklearn.metrics import r2_score
-r2 = r2_score(yTest,yPredictions) #uses N=160 as divisor
+r2 = r2_score(yTest,yPredictions)
 
-print('\nThe amount of variance in y that can be explained away by using information about x in our linear model (r^2): ' + str(r2))
-
-
+print('\nThe amount of variance in y that can be explained away by using information about x in our logistic model (r^2): ' + str(r2))
 
 #K-Nearest neighbors
 

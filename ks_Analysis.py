@@ -40,8 +40,8 @@ ks = ks.drop(['blurb','country','creator','currency_symbol',
                   'current_currency','is_backing','is_starred','location',
                   'photo','profile','source_url','urls','name','slug','id',
                   'permissions','friends','created_at','deadline','currency',
-                  'currency_trailing_code','state_changed_at','launched_at','fx_rate',
-                  'static_usd_rate','pledged'], axis=1) 
+                  'currency_trailing_code','state_changed_at','launched_at',
+                  'fx_rate','static_usd_rate','pledged'], axis=1)
 
 
 #Analyzing total projects and overall success rate 
@@ -65,10 +65,13 @@ failed_sum = ks[ks['is_success']==0]['goal'].sum()
 mean_Success = "${:,.2f}".format(ks[ks['is_success']==1]['goal'].mean())
 mean_Failed = "${:,.2f}".format(ks[ks['is_success']==0]['goal'].mean())
 
-
+print()
 print("The average successful Kickstarter project had a goal of " + str(mean_Success) + ".")
+print()
 print("The average failed Kickstarter project had a goal of " + str(mean_Failed) + ".")
+print()
 print("The mean failed Kickstarter project had an average goal 15x that of the mean successful Kickstarter project.\n")
+print()
 #The above summary states a good relationship beween goal and success rate of a funding
 
 
@@ -79,9 +82,11 @@ failed_fund = ks[ks['is_success']==0]['usd_pledged'].sum()
 mean_FundSuccess = '${:,.2f}'.format(ks[ks['is_success']==1]['usd_pledged'].mean())
 mean_FundFailed = '${:,.2f}'.format(ks[ks['is_success']==0]['usd_pledged'].mean())
 
+print()
 print('The average successful Kickstarter project was funded at ' + str(mean_FundSuccess) + ' vs the mean goal of ' + str(mean_Success) + '.')
+print()
 print('The average failed Kickstarter project was funded at ' + str(mean_FundFailed) + ' vs the mean goal of ' + str(mean_Failed) + '.')
-
+print()
 		
 """
 Lets clean the data now and keep only those data which are making impact: keep only the relevant data. 
@@ -120,7 +125,11 @@ relData.head()
 #Visualizing relationship between is_success and backers count
 #Identifies distribution of success of securing funds against the backers_count is not normal
 successGroups = relData.groupby(['backers_count'])['is_success']
-successGroups.count().plot(kind='bar')
+successGroups.count().plot(kind='hist')
+successGroups.count().plot.hist(bins=15)
+plt.ylabel('Count of Successful Projects')
+plt.xlabel('Backer Count')
+
 
 #Visualizing the distribution of success against different categories
 #The top two categories successfully securing funding are 'Film & Video' and 'Art'
@@ -133,6 +142,7 @@ relData.plot.box(grid=True)
 #Histograms to be analysed
 #Visualizing success against backers count
 relData['backers_count'].hist(by=relData['is_success'])
+
 
 #Visualizing success against categories
 relData['category'].hist(by=relData['is_success'])
@@ -197,6 +207,9 @@ yTrain = relData.iloc[trainRows,0] #first columns
 
 xTrain.head()
 
+for colName in xTrain:
+    print(colName)
+
 xTest = relData.iloc[testRows,1:] #take all columns
 yTest = relData.iloc[testRows,0] #first columns
 
@@ -244,3 +257,60 @@ sort_data = relData.sort_values(by='dist', ascending=True) #sort data by distanc
 FiftyNearestDist = sort_data['dist'].head(50) #select 50 nearest neighbor
 
 print('\nFifty K-Nearest neighbors : ' + str(list(FiftyNearestDist)))
+
+# model without "is_starrable"
+# is starrable has no impact on the original model, has a beta of 0
+# this model has better accuracy, lower error, lower wrong predictions
+
+ksRerun = relData
+del ksRerun["is_starrable"]
+ksRerun.head()
+
+for colName in ksRerun:
+    print(colName)
+
+
+shuRowNum = np.random.permutation(3346)
+trainRows = shuRowNum[0:2676]
+testRows = shuRowNum[2676:]
+
+xTrainRerun = ksRerun.iloc[trainRows,1:] #take all columns
+yTrainRerun = relData.iloc[trainRows,0] #first columns
+
+xTrainRerun.head()
+
+for colName in xTrainRerun:
+    print(colName)
+
+xTestRerun = ksRerun.iloc[testRows,1:] #take all columns
+yTestRerun = ksRerun.iloc[testRows,0] #first columns
+
+
+from sklearn import linear_model
+
+regRerun = linear_model.LogisticRegression(solver='lbfgs')
+
+#Training and modeling data
+
+modelRerun = reg.fit(xTrainRerun,yTrainRerun)
+
+print('\nBeta predictor values :' + str(modelRerun.coef_)) #prints all beta values
+print('Beta0 (y-intercept) :' + str(modelRerun.intercept_)) #print value of beta0 (y-intercept)
+
+from sklearn import metrics
+#model_prediction is 1 or 0
+model_prediction_Rerun = modelRerun.predict(xTestRerun)
+print('\nModel accuracy: ', metrics.accuracy_score(yTestRerun, model_prediction_Rerun))
+
+from sklearn.metrics import mean_squared_error
+mseRerun = mean_squared_error(yTestRerun,model_prediction_Rerun)
+print('The average error that remains in our model (mse): ' + str(mseRerun))
+
+#Measuring the effectiveness of our model
+errorsRerun = (model_prediction_Rerun - yTestRerun)
+
+#Number of wrong predictions
+print('\nNumber of wrong predictions: ' + str(sum(abs(errorsRerun))))
+    
+    
+    

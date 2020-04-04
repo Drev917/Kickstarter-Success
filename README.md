@@ -1,7 +1,7 @@
 # A Data Analysis of Kickstarter Projects 
 #### Project Group: Habitual Calculators
 
-This repository contains the Kickstarter Data Analysis project files.
+This repository contains the files used in our team's Kickstarter Data Analysis project.
 
 Our group intends to determine the factors that contribute to a Kickstarter project’s success in several steps:  
 
@@ -19,13 +19,13 @@ Our group intends to determine the factors that contribute to a Kickstarter proj
 - If correlation can be determined between pledged amount and backers count by Kickstarter category and whether that leads to a project's ultimate success or failure.
 -	Logistic regression to train and test the data in order to form a predictive model of success probability.
 
- After the EDA is complete, using various selection methods (AIC, BIC, ML algorithms), we will attempt to build models using our data to answer the questions we have outlined. 
+After the EDA is complete, using various selection methods (AIC, BIC, ML algorithms), we will attempt to build models using our data to answer the questions we have outlined. 
  
 ##### How can this data be presented? 
 
 Our group will be using the Numpy and Pandas libaries to cleanse, categorize, and order the dataset. We will then use tools from the scikit ML library to run predictive analysis to guage the factors that contribute to a Kickstarter project's success.  
 
-In order to visualize the data, our team will be using the Matplotlib libary.
+In order to visualize the data, our team will be using the Matplotlib library.
  
 Our group will then present the data in an analytical format incorporating skills and statistical modeling learned through the course and from our own research.
 

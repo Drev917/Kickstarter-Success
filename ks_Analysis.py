@@ -6,7 +6,6 @@ Dataset: Kickstarter campaigns scraped from January 2020 on https://webrobots.io
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
 import json
 
 # Create ks dataframe
@@ -63,8 +62,8 @@ del ks["state"]
 successful_sum = ks[ks['is_success']==1]['goal'].sum()
 failed_sum = ks[ks['is_success']==0]['goal'].sum()
 
-mean_Success = "${:,.2f}".format(successful_sum / ks_success_num)
-mean_Failed = "${:,.2f}".format(failed_sum / ks_failed_num)
+mean_Success = "${:,.2f}".format(ks[ks['is_success']==1]['goal'].mean())
+mean_Failed = "${:,.2f}".format(ks[ks['is_success']==0]['goal'].mean())
 
 
 print("The average successful Kickstarter project had a goal of " + str(mean_Success) + ".")
@@ -77,8 +76,8 @@ print("The mean failed Kickstarter project had an average goal 15x that of the m
 successful_fund = ks[ks['is_success']==1]['usd_pledged'].sum()
 failed_fund = ks[ks['is_success']==0]['usd_pledged'].sum()
 
-mean_FundSuccess = '${:,.2f}'.format(successful_fund / ks_success_num)
-mean_FundFailed = '${:,.2f}'.format(failed_fund / ks_failed_num)
+mean_FundSuccess = '${:,.2f}'.format(ks[ks['is_success']==1]['usd_pledged'].mean())
+mean_FundFailed = '${:,.2f}'.format(ks[ks['is_success']==0]['usd_pledged'].mean())
 
 print('The average successful Kickstarter project was funded at ' + str(mean_FundSuccess) + ' vs the mean goal of ' + str(mean_Success) + '.')
 print('The average failed Kickstarter project was funded at ' + str(mean_FundFailed) + ' vs the mean goal of ' + str(mean_Failed) + '.')
@@ -213,29 +212,24 @@ model = reg.fit(xTrain,yTrain)
 print('\nBeta predictor values :' + str(reg.coef_)) #prints all beta values
 print('Beta0 (y-intercept) :' + str(reg.intercept_)) #print value of beta0 (y-intercept)
 
-yPredictions = reg.predict(xTest)
-
-#Measuring the effectiveness of our model
-errors = (yPredictions-yTest)
-
-#Number of correct predictions divided by total predictions
-score = reg.score(xTest,yTest)
-print('\nCorrect predictions of success percentage (score): ' + str(score))
+from sklearn import metrics
+#model_prediction is 1 or 0
+model_prediction = reg.predict(xTest)
+print('\nModel accuracy: ', metrics.accuracy_score(yTest, model_prediction))
 
 from sklearn.metrics import mean_squared_error
-mse = mean_squared_error(yTest,yPredictions)
-print('\nThe average error that remains in our model (mse): ' + str(mse))
+mse = mean_squared_error(yTest,model_prediction)
+print('The average error that remains in our model (mse): ' + str(mse))
 
-#R-squared value
-from sklearn.metrics import r2_score
-r2 = r2_score(yTest,yPredictions)
+#Measuring the effectiveness of our model
+errors = (model_prediction - yTest)
 
-print('\nThe amount of variance in y that can be explained away by using information about x in our logistic model (r^2): ' + str(r2))
+#Number of wrong predictions
+print('\nNumber of wrong predictions: ' + str(sum(abs(errors))))
+
 
 #K-Nearest neighbors
-
 # Ramdomly choose the values that closed to the means for sample values 
-
 sample_backers_count = 215
 sample_goal = 94000
 sample_usd_pledged =23500

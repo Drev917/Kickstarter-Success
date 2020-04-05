@@ -122,6 +122,12 @@ relData = ks.loc[:,selectedCols]
 #Data cleansed preview
 relData.head()
 
+#Briefly glimpse linear relationships among numeric variables ('baker count', 'goal', and 'usd pledged')
+
+selectedCols2  = ["backers_count", "goal", "usd_pledged"]
+relData2 = ks.loc[:,selectedCols2]
+sns.pairplot(relData2)
+
 #Visualizing relationship between is_success and backers count
 #Identifies distribution of success of securing funds against the backers_count is not normal
 successGroups = relData.groupby(['backers_count'])['is_success']

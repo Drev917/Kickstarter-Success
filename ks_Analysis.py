@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import json
+import seaborn as sns
 
 # Create ks dataframe
 ks = pd.read_csv("ks.csv")

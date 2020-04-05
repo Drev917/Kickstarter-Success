@@ -322,8 +322,8 @@ kmeans4.cluster_centers_
 
 plt.scatter(x[:,0],x[:,1],c=y_kmeans4, cmap='rainbow',alpha=0.7)
 plt.xlabel('Number of backers', fontsize=12)
-plt.ylabel('Goals ($)', fontsize=12)
-plt.title('Clustering between Backers and Goals', fontsize=16)
+plt.ylabel('The founding goal ($)', fontsize=12)
+plt.title('Clustering between backers and founding goals', fontsize=16)
 
 # Bakers vs. Pledged
 
@@ -336,8 +336,8 @@ plt.title('Clustering between backers and pledged', fontsize=16)
 
 plt.scatter(x[:,2],x[:,1],c=y_kmeans4, cmap='inferno',alpha=0.8)
 plt.xlabel('Pledged ($)', fontsize=12)
-plt.ylabel('Goals ($)', fontsize=12)
-plt.title('Clustering between goals and pledged', fontsize=16)
+plt.ylabel('The founding goal ($)', fontsize=12)
+plt.title('Clustering between pledged and founding goal', fontsize=16)
 
 
 # model without "is_starrable"

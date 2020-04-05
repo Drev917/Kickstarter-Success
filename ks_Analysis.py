@@ -275,6 +275,71 @@ FiftyNearestDist = sort_data['dist'].head(50) #select 50 nearest neighbor
 
 print('\nFifty K-Nearest neighbors : ' + str(list(FiftyNearestDist)))
 
+#K-means
+
+from sklearn.cluster import KMeans
+selectedCols2  = ["backers_count", "goal", "usd_pledged"]
+relData2 = ks.loc[:,selectedCols2]
+relData2.head(10)
+
+#remove outliners (Z-score>3 and Z-score<-3)
+#Becsuse the dataset has broad ranges in the observations, the outliners cannot form clustering  
+#Thus we need to remove some outliners to form the clusters
+
+from scipy import stats
+
+z_scores = stats.zscore(relData2)
+abs_z_scores = np.abs(z_scores)
+filtered_entries = (abs_z_scores < 3).all(axis=1)
+new_relData2 = relData2[filtered_entries]
+
+#Use 'Elbow method' to check how many clusters should the dataset split
+
+x = new_relData2.iloc[:,[0,1,2]].values
+
+Error =[]
+for i in range(1, 10):
+    kmeans = KMeans(n_clusters = i).fit(x)
+    kmeans.fit(x)
+    Error.append(kmeans.inertia_)
+
+import matplotlib.pyplot as plt
+plt.plot(range(1, 10), Error)
+plt.title('Elbow method')
+plt.xlabel('No of clusters')
+plt.ylabel('Error')
+plt.show()
+
+#The result suggests that the data splits in 4 clusters (k=4)
+
+kmeans4 = KMeans(n_clusters=4)
+y_kmeans4 = kmeans4.fit_predict(x)
+print(y_kmeans4)
+
+kmeans4.cluster_centers_
+
+# Bakers vs. Goals
+
+plt.scatter(x[:,0],x[:,1],c=y_kmeans4, cmap='rainbow',alpha=0.7)
+plt.xlabel('Number of backers', fontsize=12)
+plt.ylabel('Goals ($)', fontsize=12)
+plt.title('Clustering between Backers and Goals', fontsize=16)
+
+# Bakers vs. Pledged
+
+plt.scatter(x[:,0],x[:,2],c=y_kmeans4, cmap='viridis',alpha=0.7)
+plt.xlabel('Number of backers', fontsize=12)
+plt.ylabel('Pledged ($)', fontsize=12)
+plt.title('Clustering between backers and pledged', fontsize=16)
+
+# Pledged vs. Goals
+
+plt.scatter(x[:,2],x[:,1],c=y_kmeans4, cmap='inferno',alpha=0.8)
+plt.xlabel('Pledged ($)', fontsize=12)
+plt.ylabel('Goals ($)', fontsize=12)
+plt.title('Clustering between goals and pledged', fontsize=16)
+
+
 # model without "is_starrable"
 # is starrable has no impact on the original model, has a beta of 0
 # this model has better accuracy, lower error, lower wrong predictions

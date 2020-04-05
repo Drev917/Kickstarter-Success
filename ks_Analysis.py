@@ -284,7 +284,7 @@ relData2.head(10)
 
 #remove outliners (Z-score>3 and Z-score<-3)
 #Becsuse the dataset has broad ranges in the observations, the outliners cannot form clustering  
-#Thus we need to remove some outliners to form the clusters
+#Thus, we filter outliners to form the clusters
 
 from scipy import stats
 

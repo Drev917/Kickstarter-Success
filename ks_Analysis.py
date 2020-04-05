@@ -135,6 +135,7 @@ plt.xlabel('Backer Count')
 #The top two categories successfully securing funding are 'Film & Video' and 'Art'
 successGroups = relData.groupby(['category'])['is_success']
 successGroups.count().plot(kind='bar')
+plt.ylabel('Count of Successful Projects')
 
 #Box plots, data gives no indications on relation
 relData.plot.box(grid=True)
@@ -142,7 +143,15 @@ relData.plot.box(grid=True)
 #Histograms to be analysed
 #Visualizing success against backers count
 relData['backers_count'].hist(by=relData['is_success'])
+plt.ylabel('Count of Projects')
+plt.xlabel('Number of Backers')
 
+# Stacked histogram of backers to projects by success
+relData.pivot(columns='is_success').backers_count.plot(kind='hist', stacked=True)
+plt.title('Stacked Histogram:  Backers to Projects by Success')
+plt.xlabel('Number of Backers')
+plt.ylabel('Number of Projects')
+plt.legend(['Not Success', 'Success'])
 
 #Visualizing success against categories
 relData['category'].hist(by=relData['is_success'])

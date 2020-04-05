@@ -152,6 +152,7 @@ relData['backers_count'].hist(by=relData['is_success'])
 plt.ylabel('Count of Projects')
 plt.xlabel('Number of Backers')
 
+
 # Stacked histogram of backers to projects by success
 relData.pivot(columns='is_success').backers_count.plot(kind='hist', stacked=True)
 plt.title('Stacked Histogram:  Backers to Projects by Success')

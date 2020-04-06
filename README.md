@@ -36,42 +36,42 @@ Our group will then present the data in an analytical format incorporating skill
 
 Data scraped from webrobots on Kickstarter project campains was analyzed in order determine if predictions could be made on which factors more closely influenced whether a campaign was ultimately successful.
 
-![ScreenShot](https://github.com/CU-tmoney/habitualcalculators/blob/master/Proj1.JPG)
+![ScreenShot](https://github.com/CU-tmoney/habitualcalculators/blob/master/Project%20Visuals/Proj1.JPG)
 
 We ran correlation analysis on the columns in the dataset and created an 'is_success' column. Our team was only interested in projects that were either successful or failed and we modified the dataset using Pandas to only include projects with either of these values. This dropped a total of 357 projects from our intial dataset of 3703 rows leaving us with 3346 total rows.
 
 As the 'is_successful' parameter was categorical in nature, we first converted to Boolean and then to integer type. Having our y-predictor as a binary value would allow us to later run a logistic regression model on the data.
 
 
-![ScreenShot](https://github.com/CU-tmoney/habitualcalculators/blob/master/Proj2.JPG)
+![ScreenShot](https://github.com/CU-tmoney/habitualcalculators/blob/master/Project%20Visuals/Proj2.JPG)
 
 After analyzing the different predictor variables that we could use, our team chose 'backers_count', 'category', 'goal, usd_pledged', and 'staff_pick'. These variables were tied closest to our predictor, 'is_successful', and this allowed us to tune the model in order avoid over-fitting.
 
-![ScreenShot](https://github.com/CU-tmoney/habitualcalculators/blob/master/Proj3.JPG)
+![ScreenShot](https://github.com/CU-tmoney/habitualcalculators/blob/master/Project%20Visuals/Proj3.JPG)
 
 Basic inital analysis led our team to be able to see trends between mean successful projects and mean failed projects.
 
-![ScreenShot](https://github.com/CU-tmoney/habitualcalculators/blob/master/Proj4.JPG)
+![ScreenShot](https://github.com/CU-tmoney/habitualcalculators/blob/master/Project%20Visuals/Proj4.JPG)
 
 We used K-means cluster analysis using the scientific computing libary SciPy on 'backers_count', 'goal', 'usd_pledged', where N=3, in order to segment the data. 
 
-![ScreenShot](https://github.com/CU-tmoney/habitualcalculators/blob/master/Proj5.JPG)
+![ScreenShot](https://github.com/CU-tmoney/habitualcalculators/blob/master/Project%20Visuals/Proj5.JPG)
 
 We turned to Matplotlib in order to visualize successful projects by category, by breaking the 'category' slugs into individual columns. 
 
-![ScreenShot](https://github.com/CU-tmoney/habitualcalculators/blob/master/Proj6.JPG)
+![ScreenShot](https://github.com/CU-tmoney/habitualcalculators/blob/master/Project%20Visuals/Proj6.JPG)
 
 In order to predict the binary dependent variable 'is_successful', we used logistic regression analysis and displayed the log-odds units to determine a prediction equation.
 
-![ScreenShot](https://github.com/CU-tmoney/habitualcalculators/blob/master/Proj7.JPG)
+![ScreenShot](https://github.com/CU-tmoney/habitualcalculators/blob/master/Project%20Visuals/Proj7.JPG)
 
 After re-tuning the model by truncating any unecessary variables that do not point towards a prediction, we were able to determine accuracy with a small mean squared errors. 
 
-![ScreenShot](https://github.com/CU-tmoney/habitualcalculators/blob/master/Proj8.JPG)
+![ScreenShot](https://github.com/CU-tmoney/habitualcalculators/blob/master/Project%20Visuals/Proj8.JPG)
 
 Overall, we were extremely happy to be able to determine which variables weigh heavier in determining a Kickstarter campaign projects success probability.  
 
-![ScreenShot](https://github.com/CU-tmoney/habitualcalculators/blob/master/Proj9.JPG)
+![ScreenShot](https://github.com/CU-tmoney/habitualcalculators/blob/master/Project%20Visuals/Proj9.JPG)
 
 All statistical equations and alogorithms are commented and displayed in the Python code for review, including:
 - KNN

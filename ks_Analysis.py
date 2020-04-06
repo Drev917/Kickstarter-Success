@@ -13,16 +13,16 @@ import seaborn as sns
 ks = pd.read_csv("ks.csv")
 
 
-#Print the list of columns
+# Print the list of columns
 for colName in ks:
     print(colName)
     
 
-#What are the other states ks["state"].unique()['failed', 'successful', 'live', 'canceled', 'suspended']
-#Remove the live, cancelled and suspended projects, assuming that failed means no funding and successful means funding
-#secured
+# What are the other states ks["state"].unique()['failed', 'successful', 'live', 'canceled', 'suspended']
+# Remove the live, cancelled and suspended projects, assuming that failed means no funding and successful means funding
+# secured
     
-#Remove all the states where we do not know the status of funding
+# Remove all the states where we do not know the status of funding
 indexNames = ks[ ks['state'] == 'live' ].index
 ks.drop(indexNames , inplace=True)
 
@@ -33,10 +33,10 @@ indexNames = ks[ ks['state'] == 'suspended' ].index
 ks.drop(indexNames , inplace=True)
 
 
-#Now that we have just failed or successfull, we can convert the column to have integer values
+# Now that we have just failed or successfull, we can convert the column to have integer values
 ks["is_success"] = (ks["state"] == "successful").astype(int)
 
-#Dropping uneccessary column data
+# Dropping uneccessary column data
 ks = ks.drop(['blurb','country','creator','currency_symbol',
                   'current_currency','is_backing','is_starred','location',
                   'photo','profile','source_url','urls','name','slug','id',
@@ -45,7 +45,7 @@ ks = ks.drop(['blurb','country','creator','currency_symbol',
                   'fx_rate','static_usd_rate','pledged'], axis=1)
 
 
-#Analyzing total projects and overall success rate 
+# Analyzing total projects and overall success rate 
 ks_success_num = ks["is_success"].sum()
 
 ks_failed_num = len(ks) - ks_success_num
@@ -56,10 +56,10 @@ ks_SuccessRate = format(ks_success_num / ks_TotalProjects, ".2%")
 print("\nKick Starter project success rate: " + str(ks_SuccessRate) + "\nout of " + str(ks_TotalProjects) + " total projects analyzed.\n") 
 
 
-#Remove state column as it is not needed
+# Remove state column as it is not needed
 del ks["state"]
 
-#Mean goals of successful vs failed Kickstarter projects
+# Mean goals of successful vs failed Kickstarter projects
 successful_sum = ks[ks['is_success']==1]['goal'].sum()
 failed_sum = ks[ks['is_success']==0]['goal'].sum()
 
@@ -73,10 +73,10 @@ print("The average failed Kickstarter project had a goal of " + str(mean_Failed)
 print()
 print("The mean failed Kickstarter project had an average goal 15x that of the mean successful Kickstarter project.\n")
 print()
-#The above summary states a good relationship beween goal and success rate of a funding
+# The above summary states a good relationship beween goal and success rate of a funding
 
 
-#Look at mean funding vs mean goal for successful and failed Kickstarter projects
+# Look at mean funding vs mean goal for successful and failed Kickstarter projects
 successful_fund = ks[ks['is_success']==1]['usd_pledged'].sum()
 failed_fund = ks[ks['is_success']==0]['usd_pledged'].sum()
 
@@ -102,35 +102,35 @@ Also removed is_backing , is_starred columns because these contain NaN values an
 """
 
 
-#Show min 7 columns of data
+# Show min 7 columns of data
 pd.set_option('display.max_columns', 7)
 
 
-#Removing the category from first path of slug field
+# Removing the category from first path of slug field
 cat1 = []
 for i in ks['category']:
     c1 = json.loads(i)
     cat1.append(c1["slug"].split('/')[0])
 
-#Replacing the category column with the category sliced from the json field
+# Replacing the category column with the category sliced from the json field
 ks["category"] = cat1
 
 selectedCols = ["is_success","backers_count",  "category",  "goal", "usd_pledged", "is_starrable","staff_pick"]
 
-#Building the relevant data set from the ks dataset
+# Building the relevant data set from the ks dataset
 relData = ks.loc[:,selectedCols]
 
-#Data cleansed preview
+# Data cleansed preview
 relData.head()
 
-#Briefly glimpse linear relationships among numeric variables ('baker count', 'goal', and 'usd pledged')
+# Briefly glimpse linear relationships among numeric variables ('baker count', 'goal', and 'usd pledged')
 
 selectedCols2  = ["backers_count", "goal", "usd_pledged"]
 relData2 = ks.loc[:,selectedCols2]
 sns.pairplot(relData2)
 
-#Visualizing relationship between is_success and backers count
-#Identifies distribution of success of securing funds against the backers_count is not normal
+# Visualizing relationship between is_success and backers count
+# Identifies distribution of success of securing funds against the backers_count is not normal
 successGroups = relData.groupby(['backers_count'])['is_success']
 successGroups.count().plot(kind='hist')
 successGroups.count().plot.hist(bins=15)
@@ -138,17 +138,17 @@ plt.ylabel('Count of Successful Projects')
 plt.xlabel('Backer Count')
 
 
-#Visualizing the distribution of success against different categories
-#The top two categories successfully securing funding are 'Film & Video' and 'Art'
+# Visualizing the distribution of success against different categories
+# The top two categories successfully securing funding are 'Film & Video' and 'Art'
 successGroups = relData.groupby(['category'])['is_success']
 successGroups.count().plot(kind='bar')
 plt.ylabel('Count of Successful Projects')
 
-#Box plots, data gives no indications on relation
+# Box plots, data gives no indications on relation
 relData.plot.box(grid=True)
 
-#Histograms to be analysed
-#Visualizing success against backers count
+# Histograms to be analysed
+# Visualizing success against backers count
 relData['backers_count'].hist(by=relData['is_success'])
 plt.ylabel('Count of Projects')
 plt.xlabel('Number of Backers')
@@ -161,7 +161,7 @@ plt.xlabel('Number of Backers')
 plt.ylabel('Number of Projects')
 plt.legend(['Not Success', 'Success'])
 
-#Visualizing success against categories
+# Visualizing success against categories
 relData['category'].hist(by=relData['is_success'])
 
 
@@ -169,11 +169,10 @@ relData['category'].hist(by=relData['is_success'])
 #so we can use logistic regression
 
 
-#Regression analysis
-#We have a total of 3346 rows; we will use 2675 rows to train the data and rest to test the model
+# Regression analysis
+# We have a total of 3346 rows; we will use 2675 rows to train the data and rest to test the model
 
-#Converting 'categories' and 'staff_picked' and 'is_starrable' to integer colums
-
+# Converting 'categories' and 'staff_picked' and 'is_starrable' to integer columns
 relData["category"].unique()
 
 relData["is_starrable"] = (relData["is_starrable"] == True).astype(int)
@@ -235,7 +234,7 @@ from sklearn import linear_model
 
 reg = linear_model.LogisticRegression(solver='lbfgs')
 
-#Training and modeling data
+# Training and modeling data
 
 model = reg.fit(xTrain,yTrain)
 
@@ -243,7 +242,8 @@ print('\nBeta predictor values :' + str(reg.coef_)) #prints all beta values
 print('Beta0 (y-intercept) :' + str(reg.intercept_)) #print value of beta0 (y-intercept)
 
 from sklearn import metrics
-#model_prediction is 1 or 0
+
+# Model_prediction is 1 or 0
 model_prediction = reg.predict(xTest)
 print('\nModel accuracy: ', metrics.accuracy_score(yTest, model_prediction))
 
@@ -251,14 +251,14 @@ from sklearn.metrics import mean_squared_error
 mse = mean_squared_error(yTest,model_prediction)
 print('The average error that remains in our model (mse): ' + str(mse))
 
-#Measuring the effectiveness of our model
+# Measuring the effectiveness of our model
 errors = (model_prediction - yTest)
 
-#Number of wrong predictions
+# Number of wrong predictions
 print('\nNumber of wrong predictions: ' + str(sum(abs(errors))))
 
 
-#K-Nearest neighbors
+# K-Nearest neighbors
 # Ramdomly choose the values that closed to the means for sample values 
 sample_backers_count = 215
 sample_goal = 94000
@@ -275,16 +275,16 @@ FiftyNearestDist = sort_data['dist'].head(50) #select 50 nearest neighbor
 
 print('\nFifty K-Nearest neighbors : ' + str(list(FiftyNearestDist)))
 
-#K-means
+# K-means
 
 from sklearn.cluster import KMeans
 selectedCols2  = ["backers_count", "goal", "usd_pledged"]
 relData2 = ks.loc[:,selectedCols2]
 relData2.head(10)
 
-#remove outliners (Z-score>3 and Z-score<-3)
-#Becsuse the dataset has broad ranges in the observations, the outliners cannot form clustering  
-#Thus, we filter outliners to form the clusters
+# Remove outliners (Z-score>3 and Z-score<-3)
+# Because the dataset has broad ranges in the observations, the outliers cannot form clustering  
+# Thus, we filter outliers to form the clusters
 
 from scipy import stats
 
@@ -293,8 +293,7 @@ abs_z_scores = np.abs(z_scores)
 filtered_entries = (abs_z_scores < 3).all(axis=1)
 new_relData2 = relData2[filtered_entries]
 
-#Use 'Elbow method' to check how many clusters should the dataset split
-
+# Use 'Elbow method' to check how many clusters should the dataset split
 x = new_relData2.iloc[:,[0,1,2]].values
 
 Error =[]
@@ -310,7 +309,7 @@ plt.xlabel('No of clusters')
 plt.ylabel('Error')
 plt.show()
 
-#The result suggests that the data splits in 4 clusters (k=4)
+# The result suggests that the data splits in 4 clusters (k=4)
 
 kmeans4 = KMeans(n_clusters=4)
 y_kmeans4 = kmeans4.fit_predict(x)
@@ -318,22 +317,19 @@ print(y_kmeans4)
 
 kmeans4.cluster_centers_
 
-# Bakers vs. Goals
-
+# Backers vs. Goals
 plt.scatter(x[:,0],x[:,1],c=y_kmeans4, cmap='rainbow',alpha=0.7)
 plt.xlabel('Number of backers', fontsize=12)
 plt.ylabel('The founding goal ($)', fontsize=12)
 plt.title('Clustering between backers and founding goals', fontsize=16)
 
-# Bakers vs. Pledged
-
+# Backers vs. Pledged
 plt.scatter(x[:,0],x[:,2],c=y_kmeans4, cmap='viridis',alpha=0.7)
 plt.xlabel('Number of backers', fontsize=12)
 plt.ylabel('Pledged ($)', fontsize=12)
 plt.title('Clustering between backers and pledged', fontsize=16)
 
 # Pledged vs. Goals
-
 plt.scatter(x[:,2],x[:,1],c=y_kmeans4, cmap='inferno',alpha=0.8)
 plt.xlabel('Pledged ($)', fontsize=12)
 plt.ylabel('The founding goal ($)', fontsize=12)

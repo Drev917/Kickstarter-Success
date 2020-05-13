@@ -83,19 +83,17 @@ failed_fund = ks[ks['is_success']==0]['usd_pledged'].sum()
 mean_FundSuccess = '${:,.2f}'.format(ks[ks['is_success']==1]['usd_pledged'].mean())
 mean_FundFailed = '${:,.2f}'.format(ks[ks['is_success']==0]['usd_pledged'].mean())
 
-print()
+
 print('The average successful Kickstarter project was funded at ' + str(mean_FundSuccess) + ' vs the mean goal of ' + str(mean_Success) + '.')
-print()
 print('The average failed Kickstarter project was funded at ' + str(mean_FundFailed) + ' vs the mean goal of ' + str(mean_Failed) + '.')
-print()
 		
 """
-Lets clean the data now and keep only those data which are making impact: keep only the relevant data. 
+Lets clean the data now and keep only the data which are making impact: keep only the relevant data. 
 Following columns are of interest, 
 "backers_count", "category",  "goal","is_backing", "is_starrable", "is_starred",
 "staff_pick", "state_successful", "state_failed"
 
-The category field has json which contains slug key which is essentially category and sub category combination.
+The category field has json which contains a slug key which is essentially category and sub category combination.
 we will choose only the first path of the slug as category
 
 Also removed is_backing , is_starred columns because these contain NaN values and are unnecessary to the overall analysis
